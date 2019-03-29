@@ -1,5 +1,7 @@
 package redisUtils
 
+import "fmt"
+
 func SADD(key string, members ...interface{}) error {
 	conn, err := getConn()
 	if err != nil {
@@ -37,5 +39,6 @@ func Smembers(key string) ([]interface{}, error) {
 	}
 	result, err := conn.sMembers(key)
 	conn.close()
+	fmt.Println("master branch")
 	return result, err
 }
