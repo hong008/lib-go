@@ -39,6 +39,6 @@ func Smembers(key string) ([]interface{}, error) {
 	}
 	result, err := conn.sMembers(key)
 	conn.close()
-	fmt.Println("master branch")
+	fmt.Println("git rebase")
 	return result, err
 }
