@@ -383,4 +383,106 @@ func (c *RedisClient) hDel(key string, field string) (num int, err error) {
 }
 
 /*****************************list操作**********************************/
-//TODO
+//将value插入到list头部
+func (c *RedisClient) lpush(key string, values ...interface{}) error {
+	if c.Conn == nil {
+		return fmt.Errorf("unavailable conn")
+	}
+	if key == "" {
+		return fmt.Errorf("key cannot be empty")
+	}
+	if len(values) > 0 {
+		for _, v := range values {
+			_, err := redis.String(c.Do("LPUSH", key, v))
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func (c *RedisClient) lpushx(key string, values ...interface{}) error {
+	if c.Conn == nil {
+		return fmt.Errorf("unavailable conn")
+	}
+	if key == "" {
+		return fmt.Errorf("key cannot be empty")
+	}
+	if len(values) > 0 {
+		for _, v := range values {
+			_, err := redis.String(c.Do("LPUSHX", key, v))
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (c *RedisClient) rpush(key string, values ...interface{}) error {
+	if c.Conn == nil {
+		return fmt.Errorf("unavailable conn")
+	}
+	if key == "" {
+		return fmt.Errorf("key cannot be empty")
+	}
+	if len(values) > 0 {
+		for _, v := range values {
+			_, err := redis.String(c.Do("RPUSH", key, v))
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func (c *RedisClient) rpushx(key string, values ...interface{}) error {
+	if c.Conn == nil {
+		return fmt.Errorf("unavailable conn")
+	}
+	if key == "" {
+		return fmt.Errorf("key cannot be empty")
+	}
+	if len(values) > 0 {
+		for _, v := range values {
+			_, err := redis.String(c.Do("RPUSHX", key, v))
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+//移除列表的头元素，及左边的那个元素
+func (c *RedisClient) lpop(key string) ([]byte, error) {
+	if c.Conn == nil {
+		return nil, fmt.Errorf("unavailable conn")
+	}
+	if key == "" {
+		return nil, fmt.Errorf("key cannot be empty")
+	}
+	result, err := redis.Bytes(c.Do("LPOP", key))
+	if err == redis.ErrNil {
+		err = nil
+	}
+	return result, err
+}
+
+func (c *RedisClient) rpop(key string) ([]byte, error) {
+	if c.Conn == nil {
+		return nil, fmt.Errorf("unavailable conn")
+	}
+	if key == "" {
+		return nil, fmt.Errorf("key cannot be empty")
+	}
+	result, err := redis.Bytes(c.Do("RPOP", key))
+	if err == redis.ErrNil {
+		err = nil
+	}
+	return result, err
+}
