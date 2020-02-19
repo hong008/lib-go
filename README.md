@@ -224,4 +224,22 @@
     |Win series|windows|386, amd64|
 
 2. [gox](https://github.com/mitchellh/gox) -osarch="target os/target arch"<br>
-   <img src="https://github.com/hong008/notebook/blob/master/gox.jpg" alt="gox" title="gox param" width="100" height="100" />
+    
+    |target os|target arch|
+    |:--------|:----------|
+    |darwin|386|
+    |darwin|amd64|
+    |linux|386|
+    |linux|amd64|
+    |linux|arm|
+    |freebsd|386|
+    |freebsd|amd64|
+    |freebsd|arm|
+    |openbsd|386|
+    |openbsd|amd64|
+    |netbsd|386|
+    |netbsd|amd64|
+    |netbsd|arm|
+    |plan9|386|
+    |windows|386|
+    |windows|amd64|
