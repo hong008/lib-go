@@ -207,6 +207,37 @@
     }
     ```
 
+- 寻找最长不重复字串长度
+    ```
+       func MaxSubStrLen(str string) int {
+       	var maxLen int
+       	var start int
+       	m := make(map[rune]int)
+       	for i, ch := range str {
+       		if lastIndex, ok := m[ch]; ok && lastIndex >= start {
+       			start = lastIndex + 1
+       		}
+       		if i-start+1 > maxLen {
+       			maxLen = i - start + 1
+       		}
+       		m[ch] = i
+       	}
+       	return maxLen
+       } 
+    ```
+
+- 十进制转化成二进制
+    ```
+        func ConvertToBinary(data int) string {
+        	result := ""
+        	for ; data > 0; data = data / 2 {
+        		n := data % 2
+        		result = strconv.Itoa(n) + result
+        	}
+        	return result
+        }
+    ```
+
 - golang编译命令
 
 1. GOOS="target OS" GOARCH="target arch" go build -o "output file name"
