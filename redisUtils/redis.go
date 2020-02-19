@@ -2,12 +2,9 @@ package redisUtils
 
 import (
 	"fmt"
+
 	"github.com/garyburd/redigo/redis"
 	"github.com/vmihailenco/msgpack"
-)
-
-var (
-	pool *redis.Pool
 )
 
 func getConn() (*RedisClient, error) {
@@ -23,7 +20,7 @@ type RedisClient struct {
 }
 
 func (c *RedisClient) init() error {
-	conn := pool.Get()
+	conn := defaultPool.p.Get()
 	if conn == nil {
 		return fmt.Errorf("unavailable conn")
 	}

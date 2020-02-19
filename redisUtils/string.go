@@ -1,30 +1,39 @@
 package redisUtils
 
 import (
-	"github.com/garyburd/redigo/redis"
+	"sync"
 	"time"
+
+	"github.com/garyburd/redigo/redis"
 )
 
+var (
+	defaultPool *myPool
+)
+
+type myPool struct {
+	sync.Once
+	p *redis.Pool
+}
+
 //参数顺序：network/addr/password
-func InitRedisPool(redisNetwork, redisAddr, redisPass string, dbIndex int) {
-	pool = &redis.Pool{
-		Dial: func() (conn redis.Conn, e error) {
-			c, err := redis.Dial(redisNetwork, redisAddr, redis.DialPassword(redisPass))
-			if err != nil {
-				return nil, err
-			}
-			_, err = c.Do("SELECT", dbIndex)
-			return c, nil
-		},
-		MaxIdle:     10,
-		MaxActive:   0,
-		IdleTimeout: 120 * time.Second,
-		Wait:        true,
-		TestOnBorrow: func(c redis.Conn, t time.Time) error {
-			_, err := c.Do("PING")
-			return err
-		},
-	}
+func InitPool(redisNetwork, redisAddr string, options ...redis.DialOption) {
+	defaultPool = &myPool{}
+	defaultPool.Do(func() {
+		defaultPool.p = &redis.Pool{
+			Dial: func() (conn redis.Conn, e error) {
+				return redis.Dial(redisNetwork, redisAddr, options...)
+			},
+			MaxIdle:     10,
+			MaxActive:   0,
+			IdleTimeout: 120 * time.Second,
+			Wait:        true,
+			TestOnBorrow: func(c redis.Conn, t time.Time) error {
+				_, err := c.Do("PING")
+				return err
+			},
+		}
+	})
 }
 
 func GetKeys(pattern string) (keys []string, err error) {
