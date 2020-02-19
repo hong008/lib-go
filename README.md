@@ -1,5 +1,5 @@
-1. struct转map[string]interface
-    ```
+- struct转map[string]interface
+   ```
     type Data struct {
 	    Name string
 	    Age int
@@ -18,7 +18,7 @@
     }
     ```
 
-2. 在一个给定的有序数组中找两个和为某个定值的数
+- 在一个给定的有序数组中找两个和为某个定值的数
     ```
     func LookUp(array []int32, targetNum int32) (num1, num2 int32) {
     	left := 0
@@ -37,7 +37,7 @@
     }
     ```
 
-3. 判断两个字符串是否相等
+- 判断两个字符串是否相等
     ```
     func IsStrEqual(s1, s2 string) bool {
     	if len(s1) != len(s2) {
@@ -52,7 +52,7 @@
     }
     ```
 
-4. 翻转slice
+- 翻转slice
     ```
     func ReverseSlice(s []interface{}) {
     	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
@@ -61,7 +61,7 @@
     }
     ```
 
-5. 判断slice中是否存在某个item
+- 判断slice中是否存在某个item
     ```
     func IsExistItem(value interface{}, array interface{}) bool {
         switch reflect.TypeOf(array).Kind() {
@@ -77,7 +77,7 @@
     }
     ```
 
-6. 文件拷贝
+- 文件拷贝
     ```
     func CopyFile(destName, sourceName string) (int64, error) {
         src, err := os.Open(sourceName)
@@ -95,7 +95,7 @@
     }
     ```
 
-7. 判断两个map是否中的元素是否一样
+- 判断两个map是否中的元素是否一样
     ```
     func IsMapEqual(m1, m2 map[int]int) bool {
     	if len(m1) != len(m2) {
@@ -110,7 +110,7 @@
     }
     ```
 
-8. 判断字符串切片x是否包含y中的每个元素
+- 判断字符串切片x是否包含y中的每个元素
     ```
     func IsContainAll(x, y []string) bool {
         for len(y) <= len(x) {
@@ -125,7 +125,7 @@
     }
     ```
 
-9. 工厂模式
+- 工厂模式
     ```
     import "fmt"
     
@@ -172,7 +172,7 @@
     }
     ```
 
-10. 元素去重
+- 元素去重
     ```
     //
     func RemoveRepByLoop(slc []int) []int {
@@ -206,3 +206,22 @@
     	return result
     }
     ```
+
+- golang编译命令
+
+1. GOOS="target OS" GOARCH="target arch" go build -o "output file name"
+
+    |   OS   | GOOS         |       GOARCH        |
+    |:------|:------      | :---------------   |
+    |Mac|darwin|386, amd64, arm, arm64|
+    |DragonflyBSD|dragonfly|amd64|
+    |FreeBSD|freebsd|386, amd64, arm|
+    |Debian,RedHat,CentOs,Ubuntu|linux|386, amd64, arm, arm64, ppc64, ppc641e|
+    |NetBSD|netbsd|386, amd64, arm|
+    |OpenBSD|openbsd|386, amd64, arm|
+    |Plan 9|plan9|386, amd64|
+    |Solaris|solaris|amd64|
+    |Win series|windows|386, amd64|
+
+2. [gox](https://github.com/mitchellh/gox) -osarch="target os/target arch"<br>
+   <img src="https://github.com/hong008/notebook/blob/master/gox.jpg" alt="gox" title="gox param" width="100" height="100" />
