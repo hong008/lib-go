@@ -213,7 +213,7 @@
        	var maxLen int
        	var start int
        	m := make(map[rune]int)
-       	for i, ch := range str {
+       	for i, ch := range []rune(str) {
        		if lastIndex, ok := m[ch]; ok && lastIndex >= start {
        			start = lastIndex + 1
        		}
