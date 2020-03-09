@@ -1,4 +1,4 @@
-package redisUtils
+package redisUtil
 
 func SADD(key string, members ...interface{}) error {
 	conn, err := getConn()
