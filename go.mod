@@ -1,4 +1,4 @@
-module redisUtil
+module notebook
 
 go 1.14
 
