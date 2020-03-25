@@ -5,7 +5,8 @@ import "time"
 type Timer interface {
 	Remain(unit string) int32
 	Stop()
-	Start(t time.Duration, handler func())
+	After(t time.Duration, handler func())
+	Every(t time.Duration, handle func())
 }
 
 type myTimer struct {
@@ -38,8 +39,17 @@ func (m *myTimer) Stop() {
 	m.timer = nil
 }
 
-func (m *myTimer) Start(t time.Duration, handler func()) {
+func (m *myTimer) After(t time.Duration, handler func()) {
 	m.endTime = time.Now().Add(t)
 	m.handler = handler
 	time.AfterFunc(t, handler)
+}
+
+func (m *myTimer) Every(t time.Duration, handle func()) {
+	ticker := time.NewTicker(t)
+	go func() {
+		for range ticker.C {
+			handle()
+		}
+	}()
 }
