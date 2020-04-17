@@ -5,12 +5,14 @@ import "time"
 type Timer interface {
 	Remain(unit string) int32
 	Stop()
+	StopTicker()
 	After(t time.Duration, handler func())
 	Every(t time.Duration, handle func())
 }
 
 type myTimer struct {
 	timer   *time.Timer
+	ticker  *time.Ticker
 	endTime time.Time
 	handler func()
 }
@@ -20,6 +22,9 @@ func NewTimer() Timer {
 }
 
 func (m *myTimer) Remain(unit string) int32 {
+	if m.timer == nil {
+		return 0
+	}
 	r := m.endTime.Sub(time.Now())
 	switch unit {
 	case "H":
@@ -39,16 +44,24 @@ func (m *myTimer) Stop() {
 	m.timer = nil
 }
 
+func (m *myTimer) StopTicker() {
+	if m.ticker == nil {
+		return
+	}
+	m.ticker.Stop()
+	m.ticker = nil
+}
+
 func (m *myTimer) After(t time.Duration, handler func()) {
 	m.endTime = time.Now().Add(t)
 	m.handler = handler
-	time.AfterFunc(t, handler)
+	m.timer = time.AfterFunc(t, handler)
 }
 
 func (m *myTimer) Every(t time.Duration, handle func()) {
-	ticker := time.NewTicker(t)
+	m.ticker = time.NewTicker(t)
 	go func() {
-		for range ticker.C {
+		for range m.ticker.C {
 			handle()
 		}
 	}()
