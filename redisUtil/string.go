@@ -41,8 +41,8 @@ func GetKeys(pattern string) (keys []string, err error) {
 	if err != nil {
 		return keys, err
 	}
+	defer conn.close()
 	keys, err = conn.getKeys(pattern)
-	conn.close()
 	return
 }
 
@@ -51,8 +51,8 @@ func GetString(key string) (value string, err error) {
 	if err != nil {
 		return value, err
 	}
+	defer conn.close()
 	value, err = conn.getString(key)
-	conn.close()
 	return
 }
 
@@ -61,8 +61,8 @@ func SetString(key, value string) error {
 	if err != nil {
 		return err
 	}
+	defer conn.close()
 	err = conn.setString(key, value)
-	conn.close()
 	return err
 }
 
@@ -71,8 +71,8 @@ func GetBytes(key string) (value []byte, err error) {
 	if err != nil {
 		return value, err
 	}
+	defer conn.close()
 	value, err = conn.getBytes(key)
-	conn.close()
 	return value, err
 }
 
@@ -81,8 +81,8 @@ func SetBytes(key string, value []byte) error {
 	if err != nil {
 		return err
 	}
+	defer conn.close()
 	err = conn.setBytes(key, value)
-	conn.close()
 	return err
 }
 
@@ -91,8 +91,8 @@ func GetInt(key string) (value int, err error) {
 	if err != nil {
 		return value, err
 	}
+	defer conn.close()
 	value, err = conn.getInt(key)
-	conn.close()
 	return value, err
 }
 
@@ -101,8 +101,8 @@ func GetInt64(key string) (value int64, err error) {
 	if err != nil {
 		return value, err
 	}
+	defer conn.close()
 	value, err = conn.getInt64(key)
-	conn.close()
 	return value, err
 }
 
@@ -111,8 +111,8 @@ func SetInt(key string, value int64) error {
 	if err != nil {
 		return err
 	}
+	defer conn.close()
 	err = conn.setInt(key, value)
-	conn.close()
 	return err
 }
 
@@ -121,8 +121,8 @@ func GetStruct(key string, data interface{}) (value interface{}, err error) {
 	if err != nil {
 		return value, err
 	}
+	defer conn.close()
 	value, err = conn.getStruct(key, data)
-	conn.close()
 	return value, err
 }
 
@@ -131,7 +131,7 @@ func SetStruct(key string, data interface{}) error {
 	if err != nil {
 		return err
 	}
+	defer conn.close()
 	err = conn.setStruct(key, data)
-	conn.close()
 	return err
 }

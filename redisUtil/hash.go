@@ -5,8 +5,8 @@ func HGet(key string, field string) ([]byte, error) {
 	if err != nil {
 		return []byte{}, err
 	}
+	defer conn.close()
 	value, err := conn.hGet(key, field)
-	conn.close()
 	return value, err
 }
 
@@ -15,8 +15,8 @@ func HSet(key string, field string, value interface{}) error {
 	if err != nil {
 		return err
 	}
+	defer conn.close()
 	err = conn.hSet(key, field, value)
-	conn.close()
 	return err
 }
 
@@ -25,8 +25,8 @@ func HGetAll(key string) ([]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer conn.close()
 	result, err := conn.hGetAll(key)
-	conn.close()
 	return result, err
 }
 
@@ -35,8 +35,8 @@ func HKeys(key string) ([]string, error) {
 	if err != nil {
 		return []string{}, err
 	}
+	defer conn.close()
 	keys, err := conn.hKeys(key)
-	conn.close()
 	return keys, err
 }
 
@@ -45,8 +45,8 @@ func HMset(key string, field_value ...interface{}) error {
 	if err != nil {
 		return err
 	}
+	defer conn.close()
 	err = conn.hMset(key, field_value...)
-	conn.close()
 	return err
 }
 
@@ -55,7 +55,7 @@ func HDel(key, field string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+	defer conn.close()
 	num, err := conn.hDel(key, field)
-	conn.close()
 	return num, err
 }
