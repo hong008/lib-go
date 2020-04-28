@@ -22,3 +22,11 @@ func RandBetween(min, max int) int {
 	rand.Seed(time.Now().UnixNano())
 	return rand.Intn(max-min+1) + min
 }
+
+//generate rate in 100%
+func LessThanIn100(per int) bool {
+	if per < 1 || per > 100 {
+		panic("input must between 1 and 100")
+	}
+	return per >= RandBetween(1, 100)
+}
