@@ -29,7 +29,6 @@ func (m *myFile) init() {
 }
 
 func (m *myFile) Run() {
-	fmt.Println("in run")
 	file, err := os.Open(m.filePath)
 	if err != nil {
 		panic(err)
