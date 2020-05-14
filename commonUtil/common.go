@@ -2,7 +2,10 @@ package commonUtil
 
 import (
 	"math/rand"
+	"os"
+	"os/signal"
 	"regexp"
+	"syscall"
 	"time"
 	"unsafe"
 )
@@ -44,4 +47,26 @@ func String2Bytes(s string) []byte {
 	sp := *(*[2]uintptr)(unsafe.Pointer(&s))
 	bp := [3]uintptr{sp[0], sp[1], sp[1]}
 	return *(*[]byte)(unsafe.Pointer(&bp))
+}
+
+func Notify(onNotify func()) {
+	//SIGHUP		终端控制进程结束(终端连接断开)
+	//SIGQUIT		用户发送QUIT字符(Ctrl+/)触发
+	//SIGTERM		结束程序(可以被捕获、阻塞或忽略)
+	//SIGINT		用户发送INTR字符(Ctrl+C)触发
+	//SIGSTOP		停止进程(不能被捕获、阻塞或忽略)
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGSTOP, syscall.SIGINT)
+	for {
+		s := <-ch
+		switch s {
+		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGSTOP, syscall.SIGINT, syscall.SIGHUP:
+			if onNotify == nil {
+				return
+			}
+			onNotify()
+		default:
+			return
+		}
+	}
 }
