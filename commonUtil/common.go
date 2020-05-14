@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"regexp"
 	"time"
+	"unsafe"
 )
 
 //校验邮箱格式
@@ -31,4 +32,16 @@ func LessThanIn100(per int) bool {
 		panic("input must between 1 and 100")
 	}
 	return per >= RandBetween(1, 100)
+}
+
+//[]byte convert to string
+func Bytes2String(bytes []byte) string {
+	return *(*string)(unsafe.Pointer(&bytes))
+}
+
+//string convert to []byte
+func String2Bytes(s string) []byte {
+	sp := *(*[2]uintptr)(unsafe.Pointer(&s))
+	bp := [3]uintptr{sp[0], sp[1], sp[1]}
+	return *(*[]byte)(unsafe.Pointer(&bp))
 }
