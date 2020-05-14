@@ -7,7 +7,7 @@ import (
 )
 
 type Monitor interface {
-	AddFile(path string, interval int, handler func()) error
+	AddFile(path string, spec string, handler func()) error
 	DelFile(path string) error
 }
 
@@ -28,7 +28,7 @@ func NewMonitor() Monitor {
 	return mon
 }
 
-func (m *myMonitor) AddFile(path string, interval int, handler func()) error {
+func (m *myMonitor) AddFile(path string, spec string, handler func()) error {
 	m.Lock()
 	defer m.Unlock()
 	if handler == nil {
@@ -38,7 +38,7 @@ func (m *myMonitor) AddFile(path string, interval int, handler func()) error {
 		return errors.New("already exist")
 	}
 	f := &myFile{
-		interval: interval,
+		spec:     spec,
 		filePath: path,
 		updateOn: time.Now().Unix(),
 		handle:   handler,

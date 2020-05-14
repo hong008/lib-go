@@ -1,7 +1,6 @@
 package monitorUtil
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/robfig/cron/v3"
@@ -10,7 +9,7 @@ import (
 type myFile struct {
 	c        *cron.Cron
 	id       cron.EntryID
-	interval int    //每隔多少秒监听一次文件的改变
+	spec     string //时间描述
 	filePath string //单个配置文件的目录
 	updateOn int64  //最后一次更新时间
 	handle   func() //文件更新时需要直行的handler
@@ -18,8 +17,7 @@ type myFile struct {
 
 func (m *myFile) init() {
 	timer := cron.New(cron.WithSeconds())
-	desc := fmt.Sprintf("@every %ds", m.interval)
-	id, err := timer.AddJob(desc, m)
+	id, err := timer.AddJob(m.spec, m)
 	if err != nil {
 		panic(err)
 	}
