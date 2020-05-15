@@ -28,50 +28,25 @@ const (
 	logTypeFile
 )
 
-type logType int
+type (
+	logType int
+
+	LogOption func(log *myLog)
+
+	myLog struct {
+		sync.Once
+		sync.Mutex
+		outs     map[logType]io.Writer //writer集合
+		file     *os.File              //文件句柄
+		fileName string                //日志名
+		dir      string                //日志存放路径
+		size     int64                 //单个日志文件的大小限制
+	}
+)
 
 var (
 	defaultLogger = &myLog{}
 )
-
-type myLog struct {
-	sync.Once
-	sync.Mutex
-	outs     map[logType]io.Writer //writer集合
-	file     *os.File              //文件句柄
-	fileName string                //日志名
-	dir      string                //日志存放路径
-	size     int64                 //单个日志文件的大小限制
-}
-
-type LogOption func(log *myLog)
-
-func WithSize(size int64) LogOption {
-	return func(log *myLog) {
-		log.size = size
-	}
-}
-
-func WithLogDir(dir string) LogOption {
-	return func(log *myLog) {
-		log.dir = dir
-	}
-}
-
-func WithFileName(name string) LogOption {
-	return func(log *myLog) {
-		log.fileName = name
-	}
-}
-
-func InitLogger(args ...LogOption) {
-	defaultLogger.Do(func() {
-		for _, af := range args {
-			af(defaultLogger)
-		}
-		defaultLogger.init()
-	})
-}
 
 func (m *myLog) init() {
 	if m.dir == "" {
@@ -156,6 +131,33 @@ func (m *myLog) write(level string, content string) {
 			fmt.Fprintf(wr, content)
 		}
 	}
+}
+
+func WithSize(size int64) LogOption {
+	return func(log *myLog) {
+		log.size = size
+	}
+}
+
+func WithLogDir(dir string) LogOption {
+	return func(log *myLog) {
+		log.dir = dir
+	}
+}
+
+func WithFileName(name string) LogOption {
+	return func(log *myLog) {
+		log.fileName = name
+	}
+}
+
+func InitLogger(args ...LogOption) {
+	defaultLogger.Do(func() {
+		for _, af := range args {
+			af(defaultLogger)
+		}
+		defaultLogger.init()
+	})
 }
 
 ////Info

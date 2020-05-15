@@ -6,17 +6,19 @@ import (
 	"time"
 )
 
-type Monitor interface {
-	AddFile(path string, spec string, handler func()) error
-	DelFile(path string) error
-}
+type (
+	Monitor interface {
+		AddFile(path string, spec string, handler func()) error
+		DelFile(path string) error
+	}
 
-type myMonitor struct {
-	sync.RWMutex
-	fs Files
-}
+	myMonitor struct {
+		sync.RWMutex
+		fs Files
+	}
 
-type Files map[string]*myFile
+	Files map[string]*myFile
+)
 
 func (m *myMonitor) init() {
 	m.fs = make(map[string]*myFile)
