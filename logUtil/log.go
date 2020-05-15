@@ -161,7 +161,8 @@ func (m *myLog) write(level string, content string) {
 ////Info
 func T(format string, v ...interface{}) {
 	_, file, line, _ := runtime.Caller(1)
-	codeLine := "[" + shortFileName(file) + ":" + strconv.Itoa(line) + "]"
+	timeStr := time.Now().Format("2006-01-02 15:04:05.0000") + " "
+	codeLine := "[" + timeStr + shortFileName(file) + ":" + strconv.Itoa(line) + "]"
 	content := levelT + codeLine + fmt.Sprintf(format, v...) + "\n"
 	defaultLogger.write(levelT, content)
 }
@@ -170,7 +171,8 @@ func T(format string, v ...interface{}) {
 ////Error
 func E(format string, v ...interface{}) {
 	_, file, line, _ := runtime.Caller(1)
-	codeLine := "[" + shortFileName(file) + ":" + strconv.Itoa(line) + "]"
+	timeStr := time.Now().Format("2006-01-02 15:04:05.0000") + " "
+	codeLine := "[" + timeStr + shortFileName(file) + ":" + strconv.Itoa(line) + "]"
 	content := levelE + codeLine + fmt.Sprintf(format, v...) + "\n"
 	defaultLogger.write(levelE, content)
 }
@@ -178,7 +180,8 @@ func E(format string, v ...interface{}) {
 //Warn
 func W(format string, v ...interface{}) {
 	_, file, line, _ := runtime.Caller(1)
-	codeLine := "[" + shortFileName(file) + ":" + strconv.Itoa(line) + "]"
+	timeStr := time.Now().Format("2006-01-02 15:04:05.0000") + " "
+	codeLine := "[" + timeStr + shortFileName(file) + ":" + strconv.Itoa(line) + "]"
 	content := levelW + codeLine + fmt.Sprintf(format, v...) + "\n"
 	defaultLogger.write(levelW, content)
 }
