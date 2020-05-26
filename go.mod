@@ -1,4 +1,4 @@
-module notebook
+module github.com/hong008/util
 
 go 1.14
 
