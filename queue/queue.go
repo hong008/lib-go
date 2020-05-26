@@ -24,17 +24,32 @@ type (
 
 	queue struct {
 		mu    *sync.RWMutex
+		t     ListType
 		count int
 		data  []interface{}
 	}
+
+	ListType int
+)
+
+const (
+	ListTypeQueue ListType = iota + 1
+	ListTypeStack
 )
 
 var _ Queue = &queue{}
 
-func NewQueue(defaultCap int) Queue {
+func NewQueue(t ListType, defaultCap int) Queue {
+	switch t {
+	case ListTypeStack:
+	case ListTypeQueue:
+	default:
+		panic("unknown list type")
+	}
 	q := &queue{
 		mu:    &sync.RWMutex{},
 		count: 0,
+		t:     t,
 		data:  make([]interface{}, 0, defaultCap),
 	}
 	return q
@@ -71,14 +86,21 @@ func (q *queue) Push(ele interface{}) {
 
 //get&remove
 func (q *queue) Pop() interface{} {
-	if q.Len() == 0 {
+	var data interface{}
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	if q.count == 0 {
 		return nil
 	}
-	q.mu.Lock()
-	data := (q.data)[0]
-	q.data = q.data[1:]
+	switch q.t {
+	case ListTypeQueue:
+		data = q.data[0]
+		q.data = q.data[1:]
+	case ListTypeStack:
+		data = q.data[q.count-1]
+		q.data = q.data[:q.count-1]
+	}
 	q.count--
-	q.mu.Unlock()
 	return data
 }
 
@@ -101,11 +123,13 @@ func (q *queue) Del(i int) {
 	defer q.mu.Unlock()
 	q.checkLen(i)
 	q.data = append(q.data[:i], q.data[i+1:]...)
+	q.count--
 }
 
 func (q *queue) UnsafeDel(i int) {
 	q.checkLen(i)
 	q.data = append(q.data[:i], q.data[i+1:]...)
+	q.count--
 }
 
 //Get
@@ -127,15 +151,30 @@ func (q *queue) UnsafeGet(i int) interface{} {
 func (q *queue) Range(f func(i int, v interface{})) {
 	q.mu.Lock()
 	defer q.mu.Unlock()
-	for i, v := range q.data {
-		f(i, v)
+	switch q.t {
+	case ListTypeQueue:
+		for i, v := range q.data {
+			f(i, v)
+		}
+	case ListTypeStack:
+		for i := q.count - 1; i >= 0; i-- {
+			f(i, q.data[i])
+		}
 	}
+
 }
 
 //unsafe range
 func (q *queue) UnsafeRange(f func(i int, v interface{})) {
-	for i, v := range q.data {
-		f(i, v)
+	switch q.t {
+	case ListTypeQueue:
+		for i, v := range q.data {
+			f(i, v)
+		}
+	case ListTypeStack:
+		for i := q.count - 1; i >= 0; i-- {
+			f(i, q.data[i])
+		}
 	}
 }
 
