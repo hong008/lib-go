@@ -1,3 +1,13 @@
+| package  |  comment | 
+| :---- | :----|
+|[commonUtil](https://github.com/hong008/util/tree/master/commonUtil)| common|
+|[logUtil](https://github.com/hong008/util/tree/master/logUtil)|简单的日志记录|
+|[mapUtil](https://github.com/hong008/util/tree/master/mapUtil)|map操作|
+|[monitorUtil](https://github.com/hong008/util/tree/master/monitorUtil)|配置文件变更监控|
+|[queue](https://github.com/hong008/util/tree/master/queue)|模拟队列|
+|[redisUtil](https://github.com/hong008/util/tree/master/redisUtil)|对[redigo](https://github.com/garyburd/redigo)一些封装，方便自己使用|
+|[timeUtil](https://github.com/hong008/util/tree/master/timeUtil)|简单的内存定时器| 
+
 - struct转map[string]interface
    ```
     type Data struct {
