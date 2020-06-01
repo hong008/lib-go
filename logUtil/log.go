@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
 	"runtime"
 	"strconv"
 	"sync"
@@ -71,7 +72,8 @@ func (m *myLog) init() {
 			panic(err)
 		}
 	}
-	file, err := os.OpenFile(m.dir+"/"+m.fileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0755)
+	name := path.Join(m.dir, m.fileName)
+	file, err := os.OpenFile(name, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0755)
 	if err != nil {
 		panic(err)
 	}
@@ -95,13 +97,15 @@ func (m *myLog) checkLogSize() {
 		return
 	}
 	//需要分割
-	name := time.Now().Format("2006_01_02_15:04:03") + ".log"
-	err = os.Rename(m.dir+"/"+m.fileName, m.dir+"/"+name)
+	newName := path.Join(m.dir, time.Now().Format("2006_01_02_15:04:03")+".log")
+	name := path.Join(m.dir, m.fileName)
+
+	err = os.Rename(name, newName)
 	if err != nil {
 		panic(err)
 	}
 
-	file, err := os.OpenFile(m.dir+"/"+m.fileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0755)
+	file, err := os.OpenFile(name, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0755)
 	if err != nil {
 		panic(err)
 	}
