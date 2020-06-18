@@ -1,4 +1,4 @@
-module github.com/hong008/util
+module github.com/pyihe/util
 
 go 1.14
 
