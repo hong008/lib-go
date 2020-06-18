@@ -32,7 +32,7 @@ const (
 type (
 	logType int
 
-	LogOption func(log *myLog)
+	logOption func(log *myLog)
 
 	myLog struct {
 		sync.Once
@@ -137,25 +137,25 @@ func (m *myLog) write(level string, content string) {
 	}
 }
 
-func WithSize(size int64) LogOption {
+func WithSize(size int64) logOption {
 	return func(log *myLog) {
 		log.size = size
 	}
 }
 
-func WithLogDir(dir string) LogOption {
+func WithLogDir(dir string) logOption {
 	return func(log *myLog) {
 		log.dir = dir
 	}
 }
 
-func WithFileName(name string) LogOption {
+func WithFileName(name string) logOption {
 	return func(log *myLog) {
 		log.fileName = name
 	}
 }
 
-func InitLogger(args ...LogOption) {
+func InitLogger(args ...logOption) {
 	defaultLogger.Do(func() {
 		for _, af := range args {
 			af(defaultLogger)
