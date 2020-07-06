@@ -1,61 +1,31 @@
 package redisUtil
 
-func RPush(key string, values ...interface{}) error {
-	conn, err := getConn()
-	if err != nil {
-		return err
-	}
-	defer conn.close()
-	err = conn.rpush(key, values...)
+func (conn *myRedisConn) RPush(key string, values ...interface{}) error {
+	err := conn.rpush(key, values...)
 	return err
 }
 
-func RPushX(key string, values ...interface{}) error {
-	conn, err := getConn()
-	if err != nil {
-		return err
-	}
-	defer conn.close()
-	err = conn.rpushx(key, values...)
+func (conn *myRedisConn) RPushX(key string, values ...interface{}) error {
+	err := conn.rpushx(key, values...)
 	return err
 }
 
-func LPush(key string, values ...interface{}) error {
-	conn, err := getConn()
-	if err != nil {
-		return err
-	}
-	defer conn.close()
-	err = conn.lpush(key, values...)
+func (conn *myRedisConn) LPush(key string, values ...interface{}) error {
+	err := conn.lpush(key, values...)
 	return err
 }
 
-func LPushX(key string, values ...interface{}) error {
-	conn, err := getConn()
-	if err != nil {
-		return err
-	}
-	defer conn.close()
-	err = conn.lpushx(key, values...)
+func (conn *myRedisConn) LPushX(key string, values ...interface{}) error {
+	err := conn.lpushx(key, values...)
 	return err
 }
 
-func LPop(key string) (result []byte, err error) {
-	conn, err := getConn()
-	if err != nil {
-		return []byte{}, err
-	}
-	defer conn.close()
+func (conn *myRedisConn) LPop(key string) (result []byte, err error) {
 	result, err = conn.lpop(key)
 	return result, err
 }
 
-func RPop(key string) (result []byte, err error) {
-	conn, err := getConn()
-	if err != nil {
-		return []byte{}, err
-	}
-	defer conn.close()
+func (conn *myRedisConn) RPop(key string) (result []byte, err error) {
 	result, err = conn.rpop(key)
 	return result, err
 }
