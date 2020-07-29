@@ -37,9 +37,9 @@ func (conn *myRedisConn) SetInt(key string, value int64) error {
 	return err
 }
 
-func (conn *myRedisConn) GetStruct(key string, data interface{}) (value interface{}, err error) {
-	value, err = conn.getStruct(key, data)
-	return value, err
+func (conn *myRedisConn) GetStruct(key string, data interface{}) (err error) {
+	err = conn.getStruct(key, data)
+	return err
 }
 
 func (conn *myRedisConn) SetStruct(key string, data interface{}) error {

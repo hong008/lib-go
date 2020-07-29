@@ -18,7 +18,7 @@ type RedisConn interface {
 	GetInt(key string) (value int, err error)
 	GetInt64(key string) (value int64, err error)
 	SetInt(key string, value int64) error
-	GetStruct(key string, data interface{}) (value interface{}, err error)
+	GetStruct(key string, data interface{}) (err error)
 	SetStruct(key string, data interface{}) error
 
 	//hash
@@ -83,7 +83,6 @@ func WithDBIndex(db int) InitOptions {
 	}
 }
 
-//参数顺序：network/addr/password
 func NewPool(opts ...InitOptions) (RedisPool, error) {
 	defaultPool := &myPool{}
 	for _, op := range opts {
