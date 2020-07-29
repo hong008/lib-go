@@ -71,6 +71,7 @@ func Notify(onNotify func()) {
 	}
 }
 
+//随机指定长度的字符串
 func RandString(n int) string {
 	const (
 		letterBytes   = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -79,7 +80,7 @@ func RandString(n int) string {
 		letterIdxMax  = 63 / letterIdxBits
 	)
 	b := make([]byte, n)
-	rand.Seed(time.Now().Unix())
+	rand.Seed(time.Now().UnixNano())
 	for i, cache, remain := n-1, rand.Int63(), letterIdxMax; i >= 0; {
 		if remain == 0 {
 			cache, remain = rand.Int63(), letterIdxMax
