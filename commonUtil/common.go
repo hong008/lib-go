@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"os"
 	"os/signal"
+	"reflect"
 	"regexp"
 	"syscall"
 	"time"
@@ -93,4 +94,18 @@ func RandString(n int) string {
 		remain--
 	}
 	return string(b)
+}
+
+//判断src中是否有元素ele
+func Contain(src interface{}, ele interface{}) bool {
+	switch reflect.TypeOf(src).Kind() {
+	case reflect.Slice:
+		s := reflect.ValueOf(src)
+		for i := 0; i < s.Len(); i++ {
+			if reflect.DeepEqual(ele, s.Index(i).Interface()) {
+				return true
+			}
+		}
+	}
+	return false
 }
