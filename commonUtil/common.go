@@ -93,7 +93,7 @@ func RandString(n int) string {
 		cache >>= letterIdxBits
 		remain--
 	}
-	return string(b)
+	return Bytes2String(b)
 }
 
 //判断src中是否有元素ele
