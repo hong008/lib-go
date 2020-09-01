@@ -6,7 +6,6 @@ import (
 	"os"
 	"path"
 	"runtime"
-	"strconv"
 	"sync"
 	"time"
 )
@@ -19,12 +18,15 @@ const (
 	levelT = "[T] "
 	levelE = "[E] "
 	levelW = "[W] "
+	levelF = "[F] "
 
 	defaultFileSize = 60 * 1024 * 1024
 	minFileSize     = 1 * 1024 * 1024
 	defaultLogDir   = "log"
 	defaultLogName  = "default.log"
+)
 
+const (
 	logTypeStd logType = iota + 1
 	logTypeFile
 )
@@ -116,23 +118,18 @@ func (m *myLog) checkLogSize() {
 	return
 }
 
-func (m *myLog) write(level string, content string) {
+func (m *myLog) writeLog() {
+
+}
+
+func (m *myLog) write(msg, timeStr, fileName, prefix string, line, color int) {
 	m.checkLogSize()
-	var colorText int
-	switch level {
-	case levelT:
-		colorText = colorBlue
-	case levelW:
-		colorText = colorYellow
-	case levelE:
-		colorText = colorRed
-	}
 
 	for k, wr := range m.outs {
 		if k == logTypeStd {
-			fmt.Fprintf(wr, setColor(content, colorText))
+			fmt.Fprintf(wr, "%c[%dm%s[%s %s:%d] %s%c[0m\n", 0x1B, color, prefix, timeStr, fileName, line, msg, 0x1B)
 		} else {
-			fmt.Fprintf(wr, content)
+			fmt.Fprintf(wr, "%s[%s %s:%d] %s\n", prefix, timeStr, fileName, line, msg)
 		}
 	}
 }
@@ -166,30 +163,35 @@ func InitLogger(args ...logOption) {
 
 ////Info
 func T(format string, v ...interface{}) {
-	_, file, line, _ := runtime.Caller(1)
-	timeStr := time.Now().Format("2006-01-02 15:04:05.0000") + " "
-	codeLine := "[" + timeStr + shortFileName(file) + ":" + strconv.Itoa(line) + "]"
-	content := levelT + codeLine + fmt.Sprintf(format, v...) + "\n"
-	defaultLogger.write(levelT, content)
+	timeStr, fileName, line := getPrefixInfo()
+	defaultLogger.write(fmt.Sprintf(format, v...), timeStr, fileName, levelT, line, colorBlue)
 }
 
 //
 ////Error
 func E(format string, v ...interface{}) {
-	_, file, line, _ := runtime.Caller(1)
-	timeStr := time.Now().Format("2006-01-02 15:04:05.0000") + " "
-	codeLine := "[" + timeStr + shortFileName(file) + ":" + strconv.Itoa(line) + "]"
-	content := levelE + codeLine + fmt.Sprintf(format, v...) + "\n"
-	defaultLogger.write(levelE, content)
+	timeStr, fileName, line := getPrefixInfo()
+	defaultLogger.write(fmt.Sprintf(format, v...), timeStr, fileName, levelE, line, colorYellow)
 }
 
 //Warn
 func W(format string, v ...interface{}) {
+	timeStr, fileName, line := getPrefixInfo()
+	defaultLogger.write(fmt.Sprintf(format, v...), timeStr, fileName, levelW, line, colorRed)
+}
+
+//Fatal
+func F(format string, v ...interface{}) {
+	timeStr, fileName, line := getPrefixInfo()
+	defaultLogger.write(fmt.Sprintf(format, v...), timeStr, fileName, levelF, line, colorRed)
+	os.Exit(-1)
+}
+
+func getPrefixInfo() (timeStr, fileName string, line int) {
 	_, file, line, _ := runtime.Caller(1)
-	timeStr := time.Now().Format("2006-01-02 15:04:05.0000") + " "
-	codeLine := "[" + timeStr + shortFileName(file) + ":" + strconv.Itoa(line) + "]"
-	content := levelW + codeLine + fmt.Sprintf(format, v...) + "\n"
-	defaultLogger.write(levelW, content)
+	fileName = shortFileName(file)
+	timeStr = time.Now().Format("2006-01-02 15:04:05.0000")
+	return timeStr, fileName, line
 }
 
 func isExist(path string) bool {
@@ -212,8 +214,4 @@ func shortFileName(file string) string {
 		}
 	}
 	return short
-}
-
-func setColor(msg string, text int) string {
-	return fmt.Sprintf("%c[%dm%s%c[0m", 0x1B, text, msg, 0x1B)
 }

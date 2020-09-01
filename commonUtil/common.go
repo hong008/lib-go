@@ -6,10 +6,26 @@ import (
 	"os/signal"
 	"reflect"
 	"regexp"
+	"strings"
 	"syscall"
 	"time"
 	"unsafe"
 )
+
+const (
+	letterBytes   = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	letterIdxBits = 6
+	letterIdxMask = 1<<letterIdxBits - 1
+	letterIdxMax  = 63 / letterIdxBits
+)
+
+var (
+	src = rand.NewSource(time.Now().UnixNano())
+)
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
 
 //校验邮箱格式
 func CheckMailFormat(mail string) bool {
@@ -26,7 +42,6 @@ func RandBetween(min, max int) int {
 	if min >= max {
 		panic("min bigger than max")
 	}
-	rand.Seed(time.Now().UnixNano())
 	return rand.Intn(max-min+1) + min
 }
 
@@ -74,26 +89,24 @@ func Notify(onNotify func()) {
 
 //随机指定长度的字符串
 func RandString(n int) string {
-	const (
-		letterBytes   = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-		letterIdxBits = 6
-		letterIdxMask = 1<<letterIdxBits - 1
-		letterIdxMax  = 63 / letterIdxBits
-	)
-	b := make([]byte, n)
-	rand.Seed(time.Now().UnixNano())
-	for i, cache, remain := n-1, rand.Int63(), letterIdxMax; i >= 0; {
+	if n <= 0 {
+		panic("invalid n.")
+	}
+	sb := strings.Builder{}
+	sb.Grow(n)
+
+	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
 		if remain == 0 {
-			cache, remain = rand.Int63(), letterIdxMax
+			cache, remain = src.Int63(), letterIdxMax
 		}
 		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
-			b[i] = letterBytes[idx]
+			sb.WriteByte(letterBytes[idx])
 			i--
 		}
 		cache >>= letterIdxBits
 		remain--
 	}
-	return Bytes2String(b)
+	return sb.String()
 }
 
 //判断src中是否有元素ele
