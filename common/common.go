@@ -1,4 +1,4 @@
-package commonUtil
+package common
 
 import (
 	"math/rand"
@@ -20,7 +20,9 @@ const (
 )
 
 var (
-	src = rand.NewSource(time.Now().UnixNano())
+	src          = rand.NewSource(time.Now().UnixNano())
+	mailChecker  = regexp.MustCompile(`^[A-Za-z0-9]+([_\.][A-Za-z0-9]+)*@([A-Za-z0-9\-]+\.)+[A-Za-z]{2,6}$`)
+	phoneChecker = regexp.MustCompile(`^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$`)
 )
 
 func init() {
@@ -29,12 +31,12 @@ func init() {
 
 //校验邮箱格式
 func CheckMailFormat(mail string) bool {
-	return regexp.MustCompile(`^[A-Za-z0-9]+([_\.][A-Za-z0-9]+)*@([A-Za-z0-9\-]+\.)+[A-Za-z]{2,6}$`).MatchString(mail)
+	return mailChecker.MatchString(mail)
 }
 
 //校验电话号码格式
 func CheckPhoneFormat(phone string) bool {
-	return regexp.MustCompile(`^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$`).MatchString(phone)
+	return phoneChecker.MatchString(phone)
 }
 
 //生成min-max之间的一个随机数
@@ -121,4 +123,52 @@ func Contain(src interface{}, ele interface{}) bool {
 		}
 	}
 	return false
+}
+
+func Bool(b bool) *bool {
+	var ptr = new(bool)
+	*ptr = b
+	return ptr
+}
+
+func String(s string) *string {
+	var ptr = new(string)
+	*ptr = s
+	return ptr
+}
+
+func Byte(b byte) *byte {
+	var ptr = new(byte)
+	*ptr = b
+	return ptr
+}
+
+func Int(i int) *int {
+	var ptr = new(int)
+	*ptr = i
+	return ptr
+}
+
+func Int32(i int32) *int32 {
+	var ptr = new(int32)
+	*ptr = i
+	return ptr
+}
+
+func Int64(i int64) *int64 {
+	var ptr = new(int64)
+	*ptr = i
+	return ptr
+}
+
+func Float32(f float32) *float32 {
+	var ptr = new(float32)
+	*ptr = f
+	return ptr
+}
+
+func Float64(f float64) *float64 {
+	var ptr = new(float64)
+	*ptr = f
+	return ptr
 }
