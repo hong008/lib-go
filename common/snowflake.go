@@ -1,6 +1,7 @@
 package common
 
 import (
+	"errors"
 	"strconv"
 	"sync"
 	"time"
@@ -25,6 +26,8 @@ const (
 	workerShift       = numberBits              // 节点ID向左的偏移量
 )
 
+type Option func(*builder) error
+
 type builder struct {
 	mu        sync.Mutex // 添加互斥锁 确保并发安全
 	epoch     int64
@@ -34,15 +37,26 @@ type builder struct {
 }
 
 // 实例化一个工作节点
-func NewWorker(workerId int64) Worker {
-	if workerId < 0 || workerId > nodeMax {
-		panic("work id cannot more than 1024")
+func NewWorker(opts ...Option) Worker {
+	b := &builder{
+		epoch: time.Now().Unix() * 1000,
 	}
-	return &builder{
-		timestamp: 0,
-		epoch:     time.Now().Unix() * 1000,
-		workerId:  workerId,
-		number:    0,
+	for _, opt := range opts {
+		if err := opt(b); err != nil {
+			panic(err)
+		}
+	}
+
+	return b
+}
+
+func WithWorkerId(workerId int64) Option {
+	return func(b *builder) error {
+		if workerId < 0 || workerId > nodeMax {
+			return errors.New("work id cannot more than 1024")
+		}
+		b.workerId = workerId
+		return nil
 	}
 }
 
