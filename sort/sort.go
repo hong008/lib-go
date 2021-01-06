@@ -1,4 +1,4 @@
-package sortUtil
+package sort
 
 //从小到大排序
 //冒泡排序，每次找出最小的值放在最前面

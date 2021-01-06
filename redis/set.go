@@ -1,4 +1,4 @@
-package redisUtil
+package redis
 
 func (conn *myRedisConn) SADD(key string, members ...interface{}) error {
 	err := conn.sAdd(key, members...)

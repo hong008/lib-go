@@ -1,4 +1,4 @@
-package redisUtil
+package redis
 
 func (conn *myRedisConn) HGet(key string, field string) ([]byte, error) {
 	value, err := conn.hGet(key, field)

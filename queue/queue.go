@@ -1,4 +1,4 @@
-package queueUtil
+package queue
 
 import (
 	"sync"

@@ -1,4 +1,4 @@
-package common
+package errors
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ type myError struct {
 	message string
 }
 
-func New(code int, message string) Error {
+func NewError(code int, message string) Error {
 	return &myError{
 		code:    code,
 		message: message,

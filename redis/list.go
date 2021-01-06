@@ -1,4 +1,4 @@
-package redisUtil
+package redis
 
 func (conn *myRedisConn) RPush(key string, values ...interface{}) error {
 	err := conn.rpush(key, values...)

@@ -1,4 +1,4 @@
-package redisUtil
+package redis
 
 func (conn *myRedisConn) GetKeys(pattern string) (keys []string, err error) {
 	keys, err = conn.getKeys(pattern)

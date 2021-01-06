@@ -1,4 +1,4 @@
-package mapUtil
+package maps
 
 import "sync"
 
