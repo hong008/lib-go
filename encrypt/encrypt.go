@@ -27,6 +27,7 @@ func BcComparePass(hashPass, plainPass string) error {
 	return bcrypt.CompareHashAndPassword(hashBytes, []byte(plainPass))
 }
 
+//scrypt加密
 func ScryptPass(plainPass, salt string) (string, error) {
 	data, err := scrypt.Key([]byte(plainPass), []byte(salt), 1<<15, 8, 1, 32)
 	if err != nil {

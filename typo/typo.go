@@ -14,9 +14,9 @@ const (
 	letterIdxMax  = 63 / letterIdxBits
 )
 
-var (
-	src = rand.NewSource(time.Now().UnixNano())
-)
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
 
 func Bool(b bool) *bool {
 	var ptr = new(bool)
@@ -84,9 +84,9 @@ func RandString(n int) string {
 	sb := strings.Builder{}
 	sb.Grow(n)
 
-	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
+	for i, cache, remain := n-1, rand.Int63(), letterIdxMax; i >= 0; {
 		if remain == 0 {
-			cache, remain = src.Int63(), letterIdxMax
+			cache, remain = rand.Int63(), letterIdxMax
 		}
 		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
 			sb.WriteByte(letterBytes[idx])
