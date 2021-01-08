@@ -1,4 +1,4 @@
-package log
+package logs
 
 import (
 	"fmt"
@@ -22,8 +22,8 @@ const (
 
 	defaultFileSize = 60 * 1024 * 1024
 	minFileSize     = 1 * 1024 * 1024
-	defaultLogDir   = "log"
-	defaultLogName  = "default.log"
+	defaultLogDir   = "logs"
+	defaultLogName  = "default.logs"
 )
 
 const (
@@ -99,7 +99,7 @@ func (m *myLog) checkLogSize() {
 		return
 	}
 	//需要分割
-	newName := path.Join(m.dir, time.Now().Format("2006_01_02_15:04:03")+".log")
+	newName := path.Join(m.dir, time.Now().Format("2006_01_02_15:04:03")+".logs")
 	name := path.Join(m.dir, m.fileName)
 
 	err = os.Rename(name, newName)

@@ -1,4 +1,4 @@
-package math
+package maths
 
 func MaxInt(a, b int) int {
 	if a > b {
