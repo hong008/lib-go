@@ -4,6 +4,10 @@ import (
 	"fmt"
 )
 
+const (
+	ErrorCodeFail = 100000 //默认错误代码
+)
+
 type Error interface {
 	Error() string
 	Code() int
