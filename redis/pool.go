@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/pyihe/util/encoding"
+
 	"github.com/garyburd/redigo/redis"
 )
 
@@ -50,14 +52,28 @@ type RedisPool interface {
 }
 
 type myPool struct {
-	net  string
-	addr string
-	pass string
-	db   int
-	p    *redis.Pool
+	prefix  string
+	net     string
+	addr    string
+	pass    string
+	db      int
+	p       *redis.Pool
+	encoder encoding.Encoding
 }
 
 type InitOptions func(m *myPool)
+
+func WithEncoding(encoder encoding.Encoding) InitOptions {
+	return func(m *myPool) {
+		m.encoder = encoder
+	}
+}
+
+func WithPrefix(prefix string) InitOptions {
+	return func(m *myPool) {
+		m.prefix = prefix
+	}
+}
 
 func WithNetWork(net string) InitOptions {
 	return func(m *myPool) {
@@ -123,7 +139,9 @@ func (m *myPool) Get() (RedisConn, error) {
 		return nil, err
 	}
 	c := &myRedisConn{
-		conn: conn,
+		prefix:  m.prefix,
+		conn:    conn,
+		encoder: m.encoder,
 	}
 	return c, nil
 }
