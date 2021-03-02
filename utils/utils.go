@@ -9,9 +9,10 @@ import (
 	"os/signal"
 	"reflect"
 	"regexp"
+	"strconv"
 	"syscall"
 
-	"github.com/pyihe/util/typo"
+	"github.com/pyihe/util/rands"
 )
 
 var (
@@ -34,7 +35,7 @@ func LessThanIn100(per int) bool {
 	if per < 1 || per > 100 {
 		panic("input must between 1 and 100")
 	}
-	return per >= typo.RandInt(1, 100)
+	return per >= rands.Int(1, 100)
 }
 
 //如果监听到系统中断信号，则执行onNotify()
@@ -107,4 +108,14 @@ func UnGZIP(content []byte) ([]byte, error) {
 		return nil, err
 	}
 	return result, nil
+}
+
+// ConvertToBinary 十进制转换为二进制字符串
+func ConvertToBinary(data int) string {
+	result := ""
+	for ; data > 0; data = data / 2 {
+		n := data % 2
+		result = strconv.Itoa(n) + result
+	}
+	return result
 }
