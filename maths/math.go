@@ -56,8 +56,6 @@ func AbsInt64(a int64) int64 {
 	return a
 }
 
-
-
 func Abs(n int) int {
 	if n < 0 {
 		return -n
