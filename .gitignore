@@ -1,3 +1,5 @@
 *_test.go
 go.sum
 *.log
+.idea/
+.DS_Store
